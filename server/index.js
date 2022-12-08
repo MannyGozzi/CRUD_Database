@@ -33,6 +33,25 @@ app.post('/api/insert', (req, res)=>{
     });
 })
 
+app.delete('/api/delete/:movieName', (req, res) => {
+    const movieName = req.params.movieName;
+    const sqlDelete = "DELETE FROM movie_reviews WHERE movie_name = ?";
+    db.query(sqlDelete, [movieName], (err, result) => {
+        if (err) console.log(err);
+        // console.log("Deleting movie review");
+    });
+});
+
+app.put('/api/update', (req, res) => {
+    const movieName = req.body.movieName;
+    const movieReview = req.body.movieReview;
+    const sqlUpdate = "UPDATE movie_reviews SET movie_review = ? WHERE movie_name = ?";
+    db.query(sqlUpdate, [movieReview, movieName], (err, result) => {
+        if (err) console.log(err);
+        // console.log("Updating movie review with name: " + movieName + " and review: " + movieReview);
+    });
+});
+
 app.listen(portNum, ()=>{
     console.log('Running on port: ', portNum);
 });

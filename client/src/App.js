@@ -7,6 +7,7 @@ function App() {
   const [movieName, setMovieName] = useState('');
   const [movieReview, setReview] = useState('');
   const [movieList, setMovieList] = useState([]);
+  const [newReview, setNewReview] = useState("");
 
   useEffect(()=>{
     Axios.get('http://localhost:3001/api/get').then((response)=>{
@@ -16,10 +17,29 @@ function App() {
   }, []);
 
   const submitReview = ()=>{
-    Axios.post('http://localhost:3001/api/insert', {movieName: movieName, movieReview: movieReview}).then(()=>{
-      alert("successful insert");
+    Axios.post('http://localhost:3001/api/insert', {
+      movieName: movieName, 
+      movieReview: movieReview
     });
+
+    setMovieList([
+      ...movieList, 
+      {movie_name: movieName, movie_review: movieReview}
+    ]);
   };
+
+  const deleteReview = (movieName) => {
+    Axios.delete(`http://localhost:3001/api/delete/${movieName}`);
+  }
+
+  const updateReview = (movieName) => {
+    Axios.put('http://localhost:3001/api/update', {
+      movieName: movieName,
+      movieReview: newReview
+    });
+
+    setNewReview("");
+  }
 
   return (
     <div className="App">
@@ -37,7 +57,17 @@ function App() {
         <button onClick={submitReview}>Submit</button>
         {
           movieList.map((val)=>{
-            return <h1>Movie Name: {val.movie_name} | {val.movie_review}</h1>
+            return (
+              <div className="card" key={val.movieName}>
+                <h1>{val.movie_name}</h1>
+                <p>Movie Review: {val.movie_review}</p>
+                <button onClick={()=>{deleteReview(val.movie_name)}}>Delete</button>
+                <input type="text" id="updateInput" onChange={(e)=>{
+                  setNewReview(e.target.value);
+                }}/>
+                <button onClick={()=>{updateReview(val.movie_name)}}>Update</button>
+              </div>
+            );
           })
         }
       </div>
