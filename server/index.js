@@ -29,7 +29,7 @@ app.post('/api/insert', (req, res)=>{
     const movieReview = req.body.movieReview;
     const sqlInsert = "INSERT INTO movie_reviews (movie_name, movie_review) VALUES (?,?);"
     db.query(sqlInsert, [movieName, movieReview], (err, result) => {
-        console.log(result);
+        // console.log(result);
     });
 })
 
